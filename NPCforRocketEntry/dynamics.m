@@ -13,6 +13,7 @@ function state_dot=rocketdynamics(params,state,control)
     1. alpha :倾侧角
     2. beta :侧滑角
     %}
+    state_dot=zeros(6,1);
     r=state(1);
     theta=state(2);
     phi=state(3);
@@ -20,14 +21,25 @@ function state_dot=rocketdynamics(params,state,control)
     gamma=state(5);
     Psi=state(6);
 
-    [X_m,Y_m,Z_m]=aerodynamic_calculate(params,state)
-    [g_r,g_phi]=gravityVec_calculate(params,state)
+    [X_m,Y_m,Z_m]=aerodynamic_calculate(params,state,control);
+    [g_r,g_phi]=gravityVec_calculate(params,state);
+    [C_v,C_gamma,C_Psi]=CoriolisAcc_calculate(params,state);
+
+    r_dot=V*sin(gamma);
     theta_dot=V*cos(gamma)*sin(Psi)/(r*cos(phi));
     phi_dot=V*cos(gamma)*cos(Psi)/r;
-    V_dot=-Xm-g_r*sin(gamma)-g_phi*cos(gamma)*cos(Psi)+C_v;
-    
+    V_dot=-X_m-g_r*sin(gamma)-g_phi*cos(gamma)*cos(Psi)+C_v;
+    gamma_dot=Y_m/V+(V^2/r-g_r)*cos(gamma)/V+g_phi*sin(gamma)*cos(Psi)+C_gamma;
+    Psi_dot=-Z_m/(V*cos(gamma))+V*cos(gamma)*sin(Psi)*tan(phi)/r+g_phi*sin(gamma)*cos(Psi)+C_Psi;
+
+    state_dot(1)=r_dot;
+    state_dot(2)=theta_dot;
+    state_dot(3)=phi_dot;
+    state_dot(4)=V_dot;
+    state_dot(5)=gamma_dot;
+    state_dot(6)=Psi_dot;
 end
-function [X_m,Y_m,Z_m]=aerodynamic_calculate(params,state)
+function [X_m,Y_m,Z_m]=aerodynamic_calculate(params,state,control)
     %计算fitting气动力
     r=state(1);V=state(4);
     rho=rho_calculate(r);
@@ -49,6 +61,12 @@ function [C_v,C_gamma,C_Psi]=CoriolisAcc_calculate(params,state)
     omega_e=params.omega_e;
     r=state(1);
     phi=state(3);
+    V=state(4);
     gamma=state(5);
-    %C_v=omega_e^2*r*(cos(phi)^2*cos(gamma))
+    Psi=state(6);
+    C_v=omega_e^2*r*(cos(phi)^2*sin(gamma)-cos(phi)*sin(phi)*cos(Psi)*cos(gamma));
+    C_gamma=2*omega_e*sin(Psi)*cos(phi)+...
+            omega_e^2*r*cos(phi)*(sin(phi)*cos(Psi)*sin(gamma)+cos(phi)*cos(gamma));
+    C_Psi=2*omega_e*(sin(phi)-cos(Psi)*tan(gamma)*cos(phi))+...
+          omega_e^2*r*cos(phi)*sin(phi)*sin(Psi)/(V*cos(gamma));
 end
