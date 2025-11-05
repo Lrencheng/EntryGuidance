@@ -1,9 +1,14 @@
 function parameters()
+    g0=9.8;%重力常数，单位：m/s^2
+    J2=0.00108263;%纬向系数
+    R0=6356800;%地区半径，单位：m
     Cd_m=0.6;
     Cl_m=0.3;
-    mass_m=32677;
+    mass_m=32677;%地球质量
     alpha_max=0.1;%单位：弧度
     beta_max=0.1;%单位：弧度
+    S_m=10.75%单位：m^2,认为火箭的直径为3.7m
+    omega_e=7.292e-5;%地球自转角速度
     %Deviation
     rho_bias=0.2;%20%
     Cd_bias=0.2;
@@ -19,7 +24,7 @@ function parameters()
     KL_m=1.0;
     filePath = fullfile(pwd, 'para.mat');
     save(filePath, 'Cd_m', 'Cl_m', 'mass_m', 'alpha_max', 'beta_max',...
-         'KD','KL','KD_m','KL_m',...
+         'KD','KL','KD_m','KL_m','g0','S_m','J2','R0','omega_e',...
         'rho_bias', 'Cd_bias', 'Cl_bias', 'mass_bias', 'V_bias', 'X_bias');
 end
 function rho_m=rho_calculate(r)
