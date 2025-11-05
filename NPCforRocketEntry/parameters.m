@@ -4,7 +4,6 @@ function parameters()
     mass_m=32677;
     alpha_max=0.1;%单位：弧度
     beta_max=0.1;%单位：弧度
-
     %Deviation
     rho_bias=0.2;%20%
     Cd_bias=0.2;
@@ -13,8 +12,14 @@ function parameters()
     V_bias=50;%+-50m/s
     X_bias=5000;%+-5000
 
+    %fitting
+    KD=1.0;%真实偏差系数
+    KL=1.0;
+    KD_m=1.0;%自适应偏差系数
+    KL_m=1.0;
     filePath = fullfile(pwd, 'para.mat');
-    save(filePath, 'Cd_m', 'Cl_m', 'mass_m', 'alpha_max', 'beta_max', ...
+    save(filePath, 'Cd_m', 'Cl_m', 'mass_m', 'alpha_max', 'beta_max',...
+         'KD','KL','KD_m','KL_m',...
         'rho_bias', 'Cd_bias', 'Cl_bias', 'mass_bias', 'V_bias', 'X_bias');
 end
 function rho_m=rho_calculate(r)
