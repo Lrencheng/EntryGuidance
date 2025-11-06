@@ -8,6 +8,7 @@ function state_dot=rocketdynamics(params,state,control)
     5. gamma:火箭航迹角，geocentric latitude,rad
     6. Psi ：火箭航向角，heading angle，rad
     %}
+
     %{
     control控制变量：
     1. alpha :倾侧角
