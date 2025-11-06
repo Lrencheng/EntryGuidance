@@ -8,8 +8,8 @@ function [KD_m,KL_m]=ADF_calculate(params,control,prev_state,curr_state)
     gamma_curr=curr_state(5);
     Psi_prev=prev_state(6);
     Psi_curr=curr_state(6);
-    alpha_k=control.alpha;
-    beta_k=control.beta;
+    alpha=control.alpha;
+    beta=control.beta;
 
     [G_V,G_gamma,G_Psi]=GravityAccVector_calculate(params,prev_state);
     rho=rho_calculate(r_prev);%计算推测气压值：含有误差
@@ -21,8 +21,8 @@ function [KD_m,KL_m]=ADF_calculate(params,control,prev_state,curr_state)
     %使用数值解法解决KL_m问题
     %定义解决问题：公式18(2)
     function F=KLm_calculate(x)
-        Y_m=KL_m*params.Cl_m*alpha_k*q*params.S_m/params.mass_m;
-        Z_m=KL_m*params.Cl_m*beta_k*q*params.S_m/params.mass_m;
+        Y_m=KL_m*params.Cl_m*alpha*q*params.S_m/params.mass_m;
+        Z_m=KL_m*params.Cl_m*beta*q*params.S_m/params.mass_m;
         F=cos(gamma_prev+Y_m/V_prev+G_gamma)*cos(Psi_prev-Z_m/(V_prev*cos(gamma_prev))+G_Psi)-...
           cos(gamma_curr)*cos(Psi_curr);
     end

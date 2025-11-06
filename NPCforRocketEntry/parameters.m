@@ -1,5 +1,6 @@
 function parameters()
     dt=1;%单位：s,原文没有提到时间间隔
+    ts=90;%单位：s,飞行器终止制导时间
     g0=9.8;%重力常数，单位：m/s^2
     J2=0.00108263;%纬向系数
     R0=6356800;%地区半径，单位：m
@@ -24,9 +25,15 @@ function parameters()
     KD_m=1.0;%自适应偏差系数
     KL_m=1.0;
     filePath = fullfile(pwd, 'para.mat');
+    %PCG
+    terminal_X_error=50;
+    terminal_Y_error=200;
+
+
     save(filePath, 'Cd_m', 'Cl_m', 'mass_m', 'alpha_max', 'beta_max',...
-         'KD','KL','KD_m','KL_m','g0','S_m','J2','R0','omega_e',...
-        'rho_bias', 'Cd_bias', 'Cl_bias', 'mass_bias', 'V_bias', 'X_bias');
+         'KD','KL','KD_m','KL_m','g0','S_m','J2','R0','omega_e','dt',...
+        'rho_bias', 'Cd_bias', 'Cl_bias', 'mass_bias', 'V_bias', 'X_bias',...
+         'ts');
 end
 function rho_m=rho_calculate(r)
     %参数r:火箭到地心的纵向距离，单位：m

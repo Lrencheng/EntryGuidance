@@ -1,3 +1,17 @@
+function state_predict=terminus_calculate(t,params,state,control_coef)
+    N=fix((params.ts-t)/params.dt);
+    curr_state=state;
+    %进行N段迭代，N是从ts时刻到ts时刻的时间段总数
+    for k=0:N-1
+        t_curr=t+k*params.dt;
+        control_curr=ControlValues(t_curr,params,control_coef)
+        state_dot=rocketdynamics(params,curr_state,control);
+        next_state=curr_state+state_dot.*params.dt;
+        curr_state=next_state;
+    end
+    state_predict=curr_state;
+end
+
 function state_dot=rocketdynamics(params,state,control)
     %{
     state状态变量：
@@ -70,4 +84,22 @@ function [C_v,C_gamma,C_Psi]=CoriolisAcc_calculate(params,state)
             omega_e^2*r*cos(phi)*(sin(phi)*cos(Psi)*sin(gamma)+cos(phi)*cos(gamma));
     C_Psi=2*omega_e*(sin(phi)-cos(Psi)*tan(gamma)*cos(phi))+...
           omega_e^2*r*cos(phi)*sin(phi)*sin(Psi)/(V*cos(gamma));
+end
+function control=ControlValues(t,params,control_coef)
+    alpha_k=control_coef.alpha_k;
+    alpha=-alpha_k*(t-params.ts);
+    if alpha>params.alpha_max
+        alpha=params.alpha_max;
+    elseif alpha<-params.alpha_max 
+        alpha=-params.alpha_max;
+    end
+    beta_k=control_coef.beta_k;
+    beta=-beta_k*(t-params.ts);
+    if beta>params.beta_max
+        beta=params.beta_max;
+    elseif beta<-params.beta_max 
+        beta=-params.beta_max;
+    end
+    control.alpha=alpha;
+    control.beta=beta;
 end
