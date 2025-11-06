@@ -1,3 +1,4 @@
+%PCG:Predict-Corrector Guidance预测-校正制导算法
 function [alpha_k,beta_k]=PredictCorrector_guidance(t,params,state,prev_control_coef)
     
     % 当前控制系数初始猜测

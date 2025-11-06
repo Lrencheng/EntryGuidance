@@ -1,3 +1,4 @@
+%ADF:Adaptive aerodynamics fitting自适应气动力调整算法
 function [KD_m,KL_m]=ADF_calculate(params,control,prev_state,curr_state)
     %aerodynamics fittinf气动力自适应算法的实现
     %论文参考公式：公式(16),公式(17),公式(18)

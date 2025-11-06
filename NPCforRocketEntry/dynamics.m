@@ -11,7 +11,10 @@ function state_predict=terminus_calculate(t,params,state,control_coef)
     end
     state_predict=curr_state;
 end
+%"真实动力学">>仿真外环
+function Ture_dynamics(params,state,control_coef)
 
+end
 function state_dot=rocketdynamics(params,state,control)
     %{
     state状态变量：
